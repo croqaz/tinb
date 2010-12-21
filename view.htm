@@ -1,0 +1,58 @@
+
+%rebase base.htm
+
+	<div id="main_content">
+	<div id="center_content">
+
+	<table class="display" id="dtable">
+	  <thead>
+		<tr>
+	%for c in cdescr:
+		%if c == 'id':
+		  <th>ID</th>
+		%elif c == 'date' or c == 'price':
+		  <th>{{c.title()}}</th>
+		%elif c == 'cat':
+		  <th>Category</th>
+		 %elif c == 'lbl':
+		  <th>Label</th>
+		%else:
+		  <th>{{c.title()}}</th>
+		%end
+	%end
+		</tr>
+	  </thead>
+
+	  <tbody>
+	%for row in range(len(rows)):
+		<tr>
+	  %row = rows[row]
+	  %for r in range(len(row)):
+		%if r == 0:
+		  <td><a href="/edit/{{what}}/{{row[r]}}">#{{row[r]}}</a></td>
+		%elif r == 4:
+		  <td class="center">{{row[r]}}</td>
+		%elif r == 5:
+		  <td class="center">{{row[r]}} RON</td>
+		%else:
+		  <td>{{row[r]}}</td>
+		%end
+	  %end
+		</tr>
+	%end
+	  </tbody>
+
+	  <tfoot>
+		<tr>
+	  %for c in cdescr:
+		  <th><input type="text" style="margin-left:-10px" name="search_{{c.title()}}" value="Find {{c.title()}}" class="search_init" /></th>
+	  %end
+		</tr>
+	  </tfoot>
+	</table>
+	<br />
+	<div class="styled">
+	  <a href="/new/{{what}}">New {{what}}</a>
+	</div>
+
+	</div>

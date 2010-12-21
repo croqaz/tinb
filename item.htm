@@ -1,0 +1,97 @@
+
+%rebase base.htm
+%import os
+
+	<div id="main_content">
+
+	  <div class="left_sidebar">
+		<div id="left_menu">
+			<ul>
+%if categ.title()=='All':
+			<li class="selected"><a href="/browse"> Toate </a></li>
+%else:
+			<li><a href="/browse"> Toate </a></li>
+%end
+%for cat in cats:
+	%if cat[0].title()==categ.title():
+			<li class="selected"><a href="/browse/{{cat[0]}}"> {{cat[1]}} </a></li>
+	%else:
+			<li><a href="/browse/{{cat[0]}}"> {{cat[1]}} </a></li>
+	%end
+%end
+			</ul>
+		</div>
+		<div class="submenu_pic">
+			<img src="img/submenu_pic.gif" alt="" title="" />
+		</div>
+	 </div>
+
+	<div id="center_content" style="width:700px">
+
+%for p in pics:
+		<div class="apple_overlay" id="{{p[0].split('.')[0]}}">
+			<img src="database/{{p[0]}}" /><br /><h2>{{c[1]}}</h2>
+		</div>
+%end
+
+		<div class="product_box_details" style="width:665px">
+		<div class="triggers">
+			<div class="more_images">
+%for pic in range(len(pics)):
+%p = pics[pic][0]
+	%if pic == 0:
+				<img src="database/{{p}}" rel="#{{p.split('.')[0]}}" />
+	%else:
+				<img src="database/{{p}}" rel="#{{p.split('.')[0]}}" style="max-width:37px;margin:5px" />
+	%end
+%end
+%if not os.path.exists("database/%s_0.jpg" % c[0]):
+			<img src="img/not_found.png" alt="" title="" />
+%end
+			</div>
+		</div>
+		<div class="product_details_wide">
+	%if c[8] == 1:
+			<h3>{{c[1]}} (#{{c[0]}}) <font color="red">(Hidden)</font></h3>
+	%else:
+			<h3>{{c[1]}} (#{{c[0]}})</h3>
+	%end
+			<p>
+			{{c[6]}}
+			</p>
+			<p class="price">Labels :
+%for lbl in c[3].split(', '):
+			<a href="#">{{lbl}}</a>,
+%end
+			</p>
+			<p class="price">Date added : <a href="#">{{c[4]}}</a></p>
+			<p class="price">Stock : <a href="#">X</a></p>
+			<p class="price">Price : <span class="price">{{c[5]}} RON</span></p>
+
+			<div class="styled">
+				<a href="/edit/obj/{{c[0]}}">Edit</a>&nbsp;
+	%if c[8] == 1:
+				<a href="/hide/{{c[0]}}">Visible?</a>&nbsp;
+	%else:
+				<a href="/hide/{{c[0]}}">Hide?</a>&nbsp;
+	%end
+				<a href="/delete/obj/{{c[0]}}">Delete?</a>&nbsp;
+			</div>
+		</div>
+		</div>
+
+	<div class="clear"></div><br />
+
+		<div class="title">Similar objects</div>
+	%for row in rows:
+		<div class="product_box">
+		<a href="/item/{{row[0]}}"><img src="database/{{row[0]}}_0.jpg" alt="" title="" /></a>
+		<div class="product_details">
+			<h4><a href="/item/{{row[0]}}">{{row[1]}} (#{{row[0]}})</a><h4>
+			<p>Labels: <span class="details">{{row[3]}}</span></p>
+			<p class="price">Price: <span class="price">{{row[2]}} RON</span></p>
+		</div>
+		</div>
+	%end
+
+	</div>

@@ -1,0 +1,61 @@
+
+%rebase base.htm
+
+<script>
+$(document).ready(function() {
+	// hides the forms as soon as the DOM is ready
+	$('#d_forms').hide();
+	$('#g_forms').hide();
+
+	// toggles the forms on clicking the noted link
+	$('#d-toggle').click(function() {
+		$('#d_forms').toggle(200);
+		return false;
+	});
+	$('#g-toggle').click(function() {
+		$('#g_forms').toggle(200);
+		return false;
+	});
+});
+</script>
+
+	<div id="main_content">
+	<div id="center_content">
+
+		<br /><div class="ui-widget">
+		<div class="ui-state-highlight ui-corner-all" style="padding:.7em;">
+			<h3><span class="ui-icon ui-icon-gear" style="float:left;margin-right:.4em;"></span>
+			<strong>Administrative interface</strong></h3>
+
+	%if msg:
+			{{msg}}<br /><br />
+	%end
+
+			<form action="/admin" method="GET">
+			<div class="styled">
+			Cleanup, vacuum, compress database ?<br /><br />
+			<input type="submit" name="action" value="Cleanup" /><br /><br />
+
+			Backup on Dropbox ? &nbsp;<span id="d-toggle" style="color:#33f;font-weight:bold">(+)</span><br /><br />
+			<div style="display: none;" id="d_forms">
+				<input type="text" name="d_usr" value="{{pck['d']['u']}}" required /><br /><br />
+				<input type="text" name="d_pwd" value="{{pck['d']['p']}}" required /><br /><br />
+			</div>
+			<input type="submit" name="action" value="Backup_DropBox" /><br /><br />
+
+			Backup on Google Docs ? &nbsp;<span id="g-toggle" style="color:#33f;font-weight:bold">(+)</span><br /><br />
+			<div style="display: none;" id="g_forms">
+				<input type="text" name="g_usr" value="{{pck['g']['u']}}" required /><br /><br />
+				<input type="text" name="g_pwd" value="{{pck['g']['p']}}" required /><br /><br />
+			</div>
+			<input type="submit" name="action" value="Backup_GoogleDocs" /><br /><br />
+			</form>
+
+			Export HTML ?<br /><br />
+			<a href="export">Export HTML</a>
+			</div>
+
+		</div>
+		</div>
+
+	</div>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Trinkets in a Bottle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<br />
+<div id="main_container">
+
+	<div id="center_content" style="width:750px">
+	<div class="title">Sessions :</div>
+	&nbsp;&nbsp;<a href="/export"> All </a>&nbsp;&nbsp;
+%for ses in sess:
+	<a href="/export/{{ses[0]}}">{{ses[0]}}</a>&nbsp;&nbsp;
+%end
+	<br /><br />
+
+%import os
+%for row in rows:
+
+		<div class="product_box_export">
+
+	%if os.path.exists("database/%s_tmb.jpg" % row[0]):
+			<img src="database/{{row[0]}}_tmb.jpg" />
+	%else:
+			<img src="img/not_found.png" />
+	%end
+
+	<div class="product_details_wide" style="float:right;margin-top:3px">
+			<h3>{{row[1]}} (#{{row[0]}})</h3>
+			<p>
+			{{row[6]}}
+			</p>
+			<p class="price">Tip : {{row[2]}}</p>
+			<p class="price">Etichete :
+%for lbl in row[3].split(', '):
+			<a href="#">{{lbl}}</a>,
+%end
+			</p>
+			<p class="price">Data adaugarii : <a href="#">{{row[4]}}</a></p>
+			<p class="price">Pret : <span class="price">{{row[5]}} RON</span></p>
+	</div>
+
+		</div>
+<br />
+%end
+
+	</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+
+%rebase base.htm
+%import os
+
+	<div id="main_content">
+	<div id="center_content">
+
+		<br /><div class="ui-widget">
+		<div class="ui-state-highlight ui-corner-all" style="padding:.7em;">
+			<h3><span class="ui-icon ui-icon-home" style="float:left;margin-right:.4em;"></span>
+			<strong>Welcome !</strong></h3>
+			<p style="font-size:14px">This small application is meant to help you organize your things.<br />
+			Every object that you add can have a short title, a detailed description, can belong to one category and have a few labels attached.<br />
+			You can add pictures and view your objects in a gallery.<br /><br />
+			Enjoy !<br /><br /><br />
+			<img src="img/firefox_logo.png" />
+			<img src="img/python_powered.png" />
+			<img src="img/python_bottle.png" />
+			</p>
+		</div>
+		</div><br />
+
+		<div class="title">Recently added</div>
+	%for row in rows:
+		<div class="product_box">
+	%if os.path.exists("database/%s_0.jpg" % row[0]):
+		<a href="/item/{{row[0]}}"><img src="database/{{row[0]}}_0.jpg" alt="" title="" /></a>
+	%else:
+		<a href="/item/{{row[0]}}"><img src="img/not_found.png" alt="" title="" /></a>
+	%end
+		<div class="product_details">
+			<h4><a href="/item/{{row[0]}}">{{row[1]}} (#{{row[0]}})</a><h4>
+			<p>Labels: <span class="details">{{row[3]}}</span></p>
+			<p class="price">Price: <span class="price">{{row[2]}} RON</span></p>
+		</div>
+		</div>
+	%end
+
+	</div>

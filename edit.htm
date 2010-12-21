@@ -1,0 +1,92 @@
+
+%rebase base.htm
+
+	<div id="main_content">
+	<div id="center_content">
+
+	<h1 class="title">Edit {{what}} {{id}}:</h1>
+
+%if what == 'obj':
+	%for p in pics:
+	  <div class="apple_overlay" id="{{p[0].split('.')[0]}}">
+		<img src="database/{{p[0]}}" /><br /><h2>{{vname}}</h2>
+	  </div>
+	%end
+%end
+
+	<div class="product_box_details">
+	<form action="/edit/{{what}}/{{id}}" method="post" enctype="multipart/form-data">
+
+%if what == 'obj':
+	  <h4>Change Object title :</h4>
+	  <input type="text" name="name" value="{{vname}}" class="form_input" required /><br /><br />
+	  <h4>Detailed description :</h4>
+	  <textarea name="descr" class="form_textarea">{{vdescr}}</textarea><br />
+
+	%if pics:
+	  <br /><ul class="gallery">
+	  %for p in pics:
+		<li>
+		<div class="triggers"><img src="database/{{p[0]}}" rel="#{{p[0].split('.')[0]}}" />
+		<div class="styled"><a href="/delete/img/{{p[0].replace('.','%')}}">Delete?</a></div>
+		</div>
+		</li>
+	  %end
+	  </ul>
+	  <div class="clear"></div>
+
+	%end
+	  <br /><h4>Add more pictures :</h4>
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <br />
+
+	  <h4>Select category :</h4>
+	%for c in cats:
+	  %if c[0] == cat:
+      <input type="radio" name="cat" value="{{c[0]}}" checked> {{c[1]}}<br />
+	  %else:
+	  <input type="radio" name="cat" value="{{c[0]}}"> {{c[1]}}<br />
+	  %end
+	%end
+
+	  <div class="checkbox">
+	  <h4>Choose labels :</h4>
+	%for l in range(len(lbls)):
+	  %if lbls[l][1] in lbl:
+		<input type="checkbox" id="{{lbls[l][0]}}" value="{{lbls[l][1]}}" name="lbl" checked="yes" /><label for="{{lbls[l][0]}}">{{lbls[l][1]}}</label>
+	  %else:
+		<input type="checkbox" id="{{lbls[l][0]}}" value="{{lbls[l][1]}}" name="lbl" /><label for="{{lbls[l][0]}}">{{lbls[l][1]}}</label>
+	  %end
+	  %if l % 7 == 6:
+	  </div>
+	  <div class="checkbox">
+	  %end
+	%end
+	  </div>
+
+	  <br /><h4>Date when created :</h4>
+	  <input type="text" name="date" value="{{vdate}}" id="datepicker" class="form_input" required /><br />
+	  <br /><h4>Price :<h4>
+	  <input type="text" name="p" value="{{vp}}" class="form_input" required /><br />
+%elif what == 'cat':
+	  <h4>Change Category Name :<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" required /><br />
+%else:
+	  <h4>Labels are Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />
+%end
+	  <br />
+	  <div class="styled">
+%if what != 'lbl':
+	  <input type="submit" name="Submit" value="Save">&nbsp;
+%end
+%if what != 'lbl':
+	  <a href="/hide/{{id}}">Hide?</a>&nbsp;
+%end
+	  <a href="/delete/{{what}}/{{id}}">Delete?</a>&nbsp;
+	  <a href="/view/{{what}}">Cancel</a>
+	  </div>
+	</form>
+	</div>
+
+	</div>

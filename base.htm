@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Trinkets in a Bottle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="js/table-ui.css" />
+
+<script src="js/jquery.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="js/dataTables.js"></script>
+<script>
+// Datatable !
+var asInitVals = new Array();
+$(document).ready(function() {
+	oTable = $('#dtable').dataTable({
+		"bJQueryUI": true,
+		"bLengthChange": true,
+		"bFilter": true,
+		"bStateSave": true,
+		"sPaginationType": "full_numbers",
+		"oLanguage": {"sSearch": "Search all columns:"},
+	});
+
+	$("tfoot input").keyup( function () {
+		oTable.fnFilter( this.value, $("tfoot input").index(this) );
+	});
+	$("tfoot input").each( function (i) {
+		asInitVals[i] = this.value;
+	});
+	$("tfoot input").focus( function () {
+		if ( this.className == "search_init" )
+		{
+			this.className = "";
+			this.value = "";
+		}
+	});
+	$("tfoot input").blur( function (i) {
+		if ( this.value == "" )
+		{
+			this.className = "search_init";
+			this.value = asInitVals[$("tfoot input").index(this)];
+		}
+	});
+});
+
+$(function() {
+	// JUI Styled Buttons, Input and Href
+	$( "button, input:submit, a", ".styled" ).button();
+	// JUI Datepicker
+	$( "#datepicker" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOtherMonths: true,
+		selectOtherMonths: true,
+	});
+	// JUI Checkbox
+	$( ".checkbox" ).buttonset();
+	// Scrollable with mousewheel support
+	$( ".scrollable" ).scrollable({
+		vertical: true,
+		mousewheel: true,
+		easing: 'swing',
+		speed: 600,
+	});
+	// Overlay
+	$( ".triggers img[rel]" ).overlay({
+		effect: 'apple',
+		mask: {
+		color: '#ccc',
+		loadSpeed: 200,
+		opacity: 0.75,
+		},
+	});
+});
+</script>
+</head>
+<body>
+<div id="main_container">
+
+	<div id="header">
+		<div class="logo">
+			<a href="/home"><img src="img/logo.png" width="221" height="91" alt="" title="" border="0" /></a>
+		</div>
+		<div id="menu_tab">
+			<ul class="menu">
+			<li class="divider"></li>
+				 <li><a href="/home" class="nav_selected"> home </a></li>
+				 <li><a href="/browse" class="nav"> browse </a></li>
+				 <li><a href="/view/obj" class="nav"> items </a></li>
+				 <li><a href="/view/cat" class="nav"> categories </a></li>
+				 <li><a href="/view/lbl" class="nav"> labels </a></li>
+				 <li><a href="/admin" class="nav"> admin </a></li>
+			</ul>
+		</div>
+		<div class="search_tab">
+			<form action="/browse" method="GET">
+			<input type="text" class="search" name="title" placeholder="search" />
+			<input type="image" src="img/search.gif" width="21" height="21" name="action" class="search_bt" />
+			</form>
+		</div>
+	</div>
+
+%include
+
+	<div id="footer">
+		<div class="left_footer"><img src="img/footer_logo.gif" alt="" title="" /></div>
+		<center>
+		<a href="/home"> Home </a> | <a href="/browse"> Browse </a> | <a href="/admin"> Administrate </a>
+		<br /> CSS Template by <a href="http://csscreme.com/freecsstemplates/" title="free css templates" style="color:#9e1c50;">csscreme</a>
+		</center>
+	</div>
+
+	</div>
+
+</div>
+</body>
+</html>

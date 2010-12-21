@@ -1,0 +1,88 @@
+
+%rebase base.htm
+%import os
+%from PIL import Image
+
+	<div id="main_content">
+
+	  <div class="left_sidebar">
+		<div id="left_menu">
+			<ul>
+%if categ.title()=='All':
+			<li class="selected"><a href="/browse"> Toate </a></li>
+%else:
+			<li><a href="/browse"> Toate </a></li>
+%end
+%for cat in cats:
+	%if cat[0].title()==categ.title():
+			<li class="selected"><a href="/browse/{{cat[0]}}"> {{cat[1]}} </a></li>
+	%else:
+			<li><a href="/browse/{{cat[0]}}"> {{cat[1]}} </a></li>
+	%end
+%end
+			</ul>
+		</div>
+		<div class="submenu_pic">
+			<img src="img/submenu_pic.gif" alt="" title="" />
+		</div>
+	 </div>
+
+	<div id="center_content" style="width:700px">
+
+	<form action="/browse/{{categ.title()}}" method="GET">
+	<div class="styled">
+		<input type="text" name="title" placeholder="Search in title" value="{{f_title}}" class="form_input" /><br /><br />
+		<input list="lbl" name="lbl" placeholder="Search in labels" value="{{f_lbl}}" class="form_input" />
+		<datalist id="lbl">
+	%for lbl in lbls:
+			<option value="{{lbl[0]}}">
+	%end
+		</datalist><br /><br />
+		<input type="submit" name="action" value="Search" />
+		<a href="/browse/{{categ.title()}}">Clear</a>
+	</div>
+	</form>
+
+		<div class="title">Browse {{categ.title()}}</div>
+	%for row in rows:
+		<div class="product_box">
+    % # If "mother" image exists.
+	%if os.path.exists("database/%s_0.jpg" % row[0]):
+      % # If thumbnail exists.
+      %if os.path.exists("database/%s_tmb.jpg" % row[0]):
+		<a href="/item/{{row[0]}}"><img src="database/{{row[0]}}_tmb.jpg" alt="" title="" /></a>
+      % # Else, create thumbnail.
+      %else:
+        %print 'Creating THUMB for ID %i !' % row[0]
+        %im = Image.open("database/%s_0.jpg" % row[0])
+        %im.thumbnail((300,360), Image.ANTIALIAS)
+        %im.save("database/%s_tmb.jpg" % row[0], "JPEG")
+        %del im
+        <a href="/item/{{row[0]}}"><img src="database/{{row[0]}}_tmb.jpg" alt="" title="" /></a>
+      %end
+	%else:
+		<a href="/item/{{row[0]}}"><img src="img/not_found.png" alt="" title="" /></a>
+	%end
+		<div class="product_details">
+		%if row[4] == 1:
+			<h4><a href="/item/{{row[0]}}">{{row[1]}} (#{{row[0]}}) <font color="red">(Hidden)</font></a><h4>
+		%else:
+			<h4><a href="/item/{{row[0]}}">{{row[1]}} (#{{row[0]}})</a><h4>
+		%end
+			<p>Labels: <span class="details">{{row[3]}}</span></p>
+			<p class="price">Price: <span class="price">{{row[2]}} RON</span></p>
+		</div>
+		</div>
+	%end
+
+%if not rows:
+		<div class="ui-widget">
+		<div class="ui-state-highlight ui-corner-all" style="padding:.7em;">
+			<h3><span class="ui-icon ui-icon-info" style="float:left;margin-right:.4em;"></span>
+			<strong>Message :</strong><br /><br />
+			<p style="font-size:14px">No products in this category.</p>
+		</div>
+		</div>
+%end
+
+	</div>

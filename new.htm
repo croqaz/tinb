@@ -1,0 +1,62 @@
+
+%rebase base.htm
+
+	<div id="main_content">
+	<div id="center_content">
+
+	<script>
+	$(function() { $( ".checkbox" ).buttonset(); });
+	</script>
+
+	<h1 class="title">Create a new {{what}}:</h1>
+
+	<div class="product_box_details">
+	<form action="/new/{{what}}" method="post" enctype="multipart/form-data">
+%if what == 'obj':
+	  <h4>New Object Title :</h4>
+	  <input type="text" name="name" class="form_input" required /><br /><br />
+	  <h4>Detailed description :</h4>
+	  <textarea name="descr" class="form_textarea"></textarea><br /><br />
+	  <h4>Add more pictures :</h4>
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <input name="pictures" size="58" type="file" class="form_input" /><br />
+	  <br /><br />
+
+	  <h4>Select category :</h4>
+      <input type="radio" name="cat" value="All" default checked> All<br />
+	%for c in cats:
+      <input type="radio" name="cat" value="{{c[0]}}"> {{c[1]}}<br />
+	%end
+
+		<div class="checkbox">
+			<h4>Choose labels :</h4>
+		%for l in range(len(lbls)):
+			<input type="checkbox" id="{{lbls[l][0]}}" value="{{lbls[l][1]}}" name="lbl" /><label for="{{lbls[l][0]}}">{{lbls[l][1]}}</label>
+			%if l % 7 == 6:
+			</div>
+			<div class="checkbox">
+			%end
+		%end
+		</div>
+
+	  <br /><h4>Date when created :</h4>
+	  <input type="text" name="date" id="datepicker" class="form_input" required /><br />
+	  <br /><h4>Price :<h4>
+	  <input type="text" name="p" class="form_input" required /><br />
+%elif what == 'cat':
+	  <h4>Category ID :</h4><input type="text" name="id" class="form_input" required /><br />
+	  <br />
+	  <h4>Category Name :</h4><input type="text" name="name" class="form_input" required />
+%elif what == 'lbl':
+	  <h4>Label Name:</h4><input type="text" name="name" class="form_input" required /><br />
+%end
+	  <br />
+	  <div class="styled">
+	  <input type="submit" name="action" value="Submit">
+	  <input type="submit" name="action" value="Cancel" />
+	  </div>
+	</form>
+	</div>
+
+	</div>

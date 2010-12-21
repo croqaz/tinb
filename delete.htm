@@ -1,0 +1,29 @@
+
+%rebase base.htm
+
+	<div id="main_content">
+	<div id="center_content">
+
+	<form action="/delete/{{what}}/{{id}}" method="GET">
+	<br />
+	<div class="ui-widget">
+	<div class="ui-state-highlight ui-corner-all" style="padding:.7em;">
+		<h3><span class="ui-icon ui-icon-home" style="float:left;margin-right:.4em;"></span>
+%if what == 'img':
+		<strong>Warning</strong></h3>
+		<p style="font-size:14px">Are you ABSOLUTELY SURE you want to delete image <b><i>{{id}}</i></b> ?</p>
+%else:
+		<strong>Warning</strong></h3>
+		<p style="font-size:14px">Are you ABSOLUTELY SURE you want to delete object &nbsp;<b><i>{{id}} : {{name}}</i></b> ?</p>
+%end
+		<div class="styled">
+			<input type="submit" name="action" value="Delete" />
+			<input type="submit" name="action" value="Cancel" /><br />
+		</div>
+		<br />
+	</div>
+	</div>
+
+	</form>
+
+	</div>
