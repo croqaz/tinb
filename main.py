@@ -170,18 +170,19 @@ def view_tables(what='obj'):
 @get('/cart')
 def shopping_cart():
 
-    d = pickle.load(open('database/cart.pck','rb'))
+    # Load shopping cart.
+    d = list(pickle.load(open('database/cart.pck','rb')))
 
-    to_delete = request.GET.getall('to_delete')
-    print to_delete # ???
+    for i in range(len(d)):
+        if request.GET.get('delete_%i' % i):
+            del d[i]
 
     rows = []
     conn = sqlite3.connect('database/database.db')
     c = conn.cursor()
 
     for r in d:
-        # Create new record.
-        # Record contains : obj id, obj name, quantity, price, client name.
+        # Every record contains : obj id, obj name, quantity, price, client name.
         record = [r['obj_id']]
         c.execute("SELECT name from object where id = ?", [r['obj_id']])
         try: record.append(c.fetchone()[0])
@@ -194,7 +195,9 @@ def shopping_cart():
         # Add record.
         rows.append(record)
 
+    # Save shopping cart.
     #pickle.dump(d, open('database/cart.pck','wb'), 2)
+    # Close database.
     c.close()
     return template('cart.htm', rows=rows)
 
