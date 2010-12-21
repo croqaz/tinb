@@ -16,10 +16,11 @@ user = os.getenv('USERNAME').lower()
 @route('/browse/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/item/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/view/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
+@route('/cart/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/hide/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/new/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
-@route('/edit/:what#obj|cat|lbl#/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
-@route('/delete/:what#obj|cat|lbl|img#/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
+@route('/edit/:what/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
+@route('/delete/:what/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/admin/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css|.*\.js#')
 @route('/export/:filename#.*\.png|.*\.gif|.*\.jpg|.*\.css#')
 def server_static(filename=None, what=None):
@@ -131,7 +132,7 @@ def export_session(ses=None):
 
 
 @route('/view')
-@route('/view/:what#obj|cat|lbl|img#')
+@route('/view/:what#obj|cat|lbl|img|tranz|clients#')
 def view_tables(what='obj'):
 
     conn = sqlite3.connect('database/database.db')
@@ -148,12 +149,54 @@ def view_tables(what='obj'):
     elif what == 'lbl':
         c.execute("SELECT * FROM labels")
         cdescr=['id','name']
+
+    # For Images, simply redirect.
     elif what == 'img':
         redirect('/view/obj')
-    rows = c.fetchall()
+    # Tranzactions.
+    elif what == 'tranz':
+        c.execute("SELECT * FROM tranzactions")
+        cdescr=['id','tranz','quantity','price']
+    # Clients.
+    elif what == 'clients':
+        c.execute("SELECT * FROM clients")
+        cdescr=['id','name']
 
+    rows = c.fetchall()
     c.close()
     return template('view.htm', what=what, rows=rows, cdescr=cdescr)
+
+
+@get('/cart')
+def shopping_cart():
+
+    d = pickle.load(open('database/cart.pck','rb'))
+
+    to_delete = request.GET.getall('to_delete')
+    print to_delete # ???
+
+    rows = []
+    conn = sqlite3.connect('database/database.db')
+    c = conn.cursor()
+
+    for r in d:
+        # Create new record.
+        # Record contains : obj id, obj name, quantity, price, client name.
+        record = [r['obj_id']]
+        c.execute("SELECT name from object where id = ?", [r['obj_id']])
+        try: record.append(c.fetchone()[0])
+        except: record.append('Invalid Obj ID')
+        record.append(r['q'])
+        record.append(r['p'])
+        c.execute("SELECT name from clients where id = ?", [r['c_id']])
+        try: record.append(c.fetchone()[0])
+        except: record.append('Invalid Client ID')
+        # Add record.
+        rows.append(record)
+
+    #pickle.dump(d, open('database/cart.pck','wb'), 2)
+    c.close()
+    return template('cart.htm', rows=rows)
 
 
 @route('/hide/:id#[A-Za-z0-9]+#')
@@ -182,7 +225,7 @@ def hide(id):
             message='The object with ID %s is now HIDDEN.' % (id))
 
 
-@get('/delete/:what#obj|cat|lbl|img#/:id#[%\._A-Za-z0-9]+#')
+@get('/delete/:what#obj|cat|lbl|img|tranz|clients#/:id#[%\._A-Za-z0-9]+#')
 def delete_item(what, id):
 
     if request.GET.get('action','').strip() == 'Delete':
@@ -262,7 +305,7 @@ def delete_item(what, id):
             return template('delete.htm', id=id, what=what, name=result[1])
 
 
-@get('/new/:what#obj|cat|lbl#')
+@route('/new/:what#obj|cat|lbl|tranz|clients#')
 def new_item(what):
 
     if what == 'obj':
@@ -278,7 +321,7 @@ def new_item(what):
         return template('new.htm', what=what)
 
 
-@post('/new/:what#obj|cat|lbl#')
+@post('/new/:what#obj|cat|lbl|tranz|clients#')
 def new_item_post(what):
 
     conn = sqlite3.connect('database/database.db')
@@ -327,7 +370,7 @@ def new_item_post(what):
         redirect('/view/'+what)
 
 
-@get('/edit/:what#obj|cat|lbl#/:id#[A-Za-z0-9]+#')
+@get('/edit/:what#obj|cat|lbl|tranz|clients#/:id#[A-Za-z0-9]+#')
 def edit_item(what, id):
 
     conn = sqlite3.connect('database/database.db')
@@ -362,11 +405,14 @@ def edit_item(what, id):
     elif what == 'lbl':
         c.execute("SELECT name FROM labels WHERE id = ?", [id])
 
+    elif what == 'clients':
+        c.execute("SELECT name FROM clients WHERE id = ?", [id])
+
     c_data = c.fetchone()
     return template('edit.htm', what=what, id=id, vname=c_data[0])
 
 
-@post('/edit/:what#obj|cat|lbl#/:id#[A-Za-z0-9]+#')
+@post('/edit/:what#obj|cat|lbl|tranz|clients#/:id#[A-Za-z0-9]+#')
 def edit_item_post(what, id):
 
     # Save all information.
@@ -424,6 +470,9 @@ def admin():
 
     # Do Cleanup.
     if request.GET.get('action','').strip() == 'Cleanup':
+        for f in glob.glob('database/*_tmb.jpg'):
+            try: os.remove(f)
+            except: pass
         c.execute('VACUUM')
         return template('admin.htm', msg='Vacuum finished width SUCCES !', pck=d)
 
@@ -433,7 +482,7 @@ def admin():
         d_pwd = request.GET.get('d_pwd','').strip()
         d['d']['u'] = d_usr
         d['d']['p'] = d_pwd
-        pickle.dump(d, open('database/pu.pck','wb'))
+        pickle.dump(d, open('database/pu.pck','wb'), 2)
         if user=='ana':
             try: shutil.copy2('database/database.db', 'D:/My Documents/My Dropbox/database_%s.db' % time.strftime('%Y-%m-%d_%H-%M'))
             except: pass

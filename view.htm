@@ -4,14 +4,16 @@
 	<div id="main_content">
 	<div id="center_content">
 
+	<h3>
+	&nbsp;<a href="/view/obj">View Items</a> | <a href="/view/cat">View Categories</a> | <a href="/view/lbl">View Labels</a> | <a href="/view/clients">View Clients</a> | <a href="/view/tranz">View Tranzactions</a>
+	</h3><br />
+
 	<table class="display" id="dtable">
 	  <thead>
 		<tr>
 	%for c in cdescr:
 		%if c == 'id':
 		  <th>ID</th>
-		%elif c == 'date' or c == 'price':
-		  <th>{{c.title()}}</th>
 		%elif c == 'cat':
 		  <th>Category</th>
 		 %elif c == 'lbl':
@@ -45,14 +47,20 @@
 	  <tfoot>
 		<tr>
 	  %for c in cdescr:
+		%if c=='tranz':
+		  <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		%else:
 		  <th><input type="text" style="margin-left:-10px" name="search_{{c.title()}}" value="Find {{c.title()}}" class="search_init" /></th>
+		%end
 	  %end
 		</tr>
 	  </tfoot>
 	</table>
+
+%if what != 'tranz':
 	<br />
 	<div class="styled">
 	  <a href="/new/{{what}}">New {{what}}</a>
 	</div>
-
+%end
 	</div>

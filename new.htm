@@ -43,13 +43,15 @@
 	  <br /><h4>Date when created :</h4>
 	  <input type="text" name="date" id="datepicker" class="form_input" required /><br />
 	  <br /><h4>Price :<h4>
-	  <input type="text" name="p" class="form_input" required /><br />
+	  <input type="text" name="p" class="form_input" autocomplete="off" required /><br />
 %elif what == 'cat':
-	  <h4>Category ID :</h4><input type="text" name="id" class="form_input" required /><br />
+	  <h4>Category ID :</h4><input type="text" name="id" class="form_input" /><br />
 	  <br />
-	  <h4>Category Name :</h4><input type="text" name="name" class="form_input" required />
+	  <h4>Category Name :</h4><input type="text" name="name" class="form_input" />
 %elif what == 'lbl':
-	  <h4>Label Name:</h4><input type="text" name="name" class="form_input" required /><br />
+	  <h4>Label Name:</h4><input type="text" name="name" class="form_input" /><br />
+%elif what == 'clients':
+	  <h4>Client Name:</h4><input type="text" name="name" class="form_input" /><br />
 %end
 	  <br />
 	  <div class="styled">

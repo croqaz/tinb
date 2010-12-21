@@ -69,18 +69,17 @@
 	  <br /><h4>Date when created :</h4>
 	  <input type="text" name="date" value="{{vdate}}" id="datepicker" class="form_input" required /><br />
 	  <br /><h4>Price :<h4>
-	  <input type="text" name="p" value="{{vp}}" class="form_input" required /><br />
+	  <input type="text" name="p" value="{{vp}}" class="form_input" autocomplete="off" required /><br />
 %elif what == 'cat':
 	  <h4>Change Category Name :<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" required /><br />
 %else:
-	  <h4>Labels are Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />
+	  <h4>This name is Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />
 %end
 	  <br />
 	  <div class="styled">
-%if what != 'lbl':
-	  <input type="submit" name="Submit" value="Save">&nbsp;
-%end
-%if what != 'lbl':
+%if what != 'lbl' and what != 'clients':
+	  <input type="submit" name="Submit" value="Save" />&nbsp;
+%elif what == 'obj':
 	  <a href="/hide/{{id}}">Hide?</a>&nbsp;
 %end
 	  <a href="/delete/{{what}}/{{id}}">Delete?</a>&nbsp;
