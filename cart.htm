@@ -1,0 +1,72 @@
+
+%rebase base.htm
+
+	<div id="main_content">
+	<div id="center_content">
+
+%if not rows:
+	<h2 style="color:white">The cart is empty. :(</h2>
+%else:
+
+	<datalist id="clients">
+	%for c in clients:
+		<option value="{{c[0]}}">
+	%end
+	</datalist>
+
+	<form action="/cart" method="get" enctype="multipart/form-data">
+	<table class="display" id="dtable">
+	  <thead>
+		<tr>
+		  <th>Item</th>
+		  <th>Title</th>
+		  <th>Quantity</th>
+		  <th>Price</th>
+		  <th>Client</th>
+		  <th>Remove?</th>
+		</tr>
+	  </thead>
+
+	  <tbody>
+	%for i in range(len(rows)):
+		<tr>
+	  %row = rows[i]
+	  %for r in range(len(row)):
+		%if r == 0:
+		  <td><a href="/item/{{row[r]}}">#{{row[r]}}</a></td>
+		%elif r == 2:
+		  <td><input type="number" name="q_{{i}}" size="6" min="1" value="{{row[r]}}"></td>
+		%elif r == 3:
+		  <td><input type="number" name="p_{{i}}" size="6" min="1" value="{{row[r]}}"></td>
+		%elif r == 4:
+		  <td><input list="clients" name="c_{{i}}" value="{{row[r]}}" /></td>
+		%else:
+		  <td>{{row[r]}}</td>
+		%end
+	  %end
+		<td><input type="checkbox" name="delete_{{i}}" /></td>
+		</tr>
+	%end
+	  </tbody>
+
+	  <tfoot>
+		<tr>
+		  <th><input type="text" style="margin-left:-10px" name="search_item" value="Find Item" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_title" value="Find Title" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_quantity" value="Find Quantity" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_price" value="Find Price" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_client" value="Find Client" class="search_init" /></th>
+		  <th> </th>
+		</tr>
+	  </tfoot>
+	</table>
+
+	<div class="styled">
+		<input type="submit" name="submit" value="Update cart" /><br /><br />
+		<a href="/browse">Continue shopping</a>
+		<input type="submit" name="submit" value="Proceed to checkout" />
+	</div>
+	</form>
+%end
+
+	</div>

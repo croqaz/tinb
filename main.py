@@ -174,12 +174,38 @@ def shopping_cart():
     d = list(pickle.load(open('database/cart.pck','rb')))
 
     for i in range(len(d)):
+        # Delete ?
         if request.GET.get('delete_%i' % i):
-            del d[i]
+            d[i] = 0
+            continue
+        # Get Quantity.
+        q = request.GET.get('q_%i' % i)
+        if q and q.strip():
+            try: d[i]['q'] = int(q.strip())
+            except: d[i]['q'] = 1
+        # Get Price.
+        p = request.GET.get('p_%i' % i)
+        if p and p.strip():
+            try: d[i]['p'] = int(p.strip())
+            except: d_new[i]['p'] = 0
+        # Get Client.
+        c = request.GET.get('c_%i' % i)
+        if c and c.strip():
+            d[i]['c'] = c.strip()
+
+    # Cleanup list.
+    d = [val for val in d if val]
+
+    # If CHECKOUT:
+    if request.GET.get('submit') == 'Proceed to checkout':
+        print '!!! Proceed to checkout DETECTED !!!'
 
     rows = []
     conn = sqlite3.connect('database/database.db')
     c = conn.cursor()
+
+    c.execute("SELECT name FROM clients")
+    clients = c.fetchall()
 
     for r in d:
         # Every record contains : obj id, obj name, quantity, price, client name.
@@ -189,17 +215,45 @@ def shopping_cart():
         except: record.append('Invalid Obj ID')
         record.append(r['q'])
         record.append(r['p'])
-        c.execute("SELECT name from clients where id = ?", [r['c_id']])
-        try: record.append(c.fetchone()[0])
-        except: record.append('Invalid Client ID')
+        record.append(r['c'])
         # Add record.
         rows.append(record)
 
     # Save shopping cart.
-    #pickle.dump(d, open('database/cart.pck','wb'), 2)
+    pickle.dump(d, open('database/cart.pck','wb'), 2)
     # Close database.
-    c.close()
-    return template('cart.htm', rows=rows)
+    c.close() ; del c
+    return template('cart.htm', rows=rows, clients=clients)
+
+
+@route('/buy/:id#[A-Za-z0-9]+#')
+def buy(id):
+
+    # Load shopping cart.
+    d = list(pickle.load(open('database/cart.pck','rb')))
+
+    conn = sqlite3.connect('database/database.db')
+    c = conn.cursor()
+    c.execute("SELECT price from object where id = ?", [id])
+    p = c.fetchone()
+    if p:
+        p = p[0]
+    else:
+        p = 0
+    c.close() ; del c
+
+    # Add this item in list.
+    r = {}
+    r['obj_id'] = id
+    r['q'] = 1
+    r['p'] = p
+    r['c'] = 'Ana Mititichi'
+    d.append(r)
+
+    # Save shopping cart.
+    pickle.dump(d, open('database/cart.pck','wb'), 2)
+
+    redirect('/cart')
 
 
 @route('/hide/:id#[A-Za-z0-9]+#')
