@@ -312,6 +312,13 @@ def delete_item(what, id):
             c.execute("DELETE FROM categories WHERE id = ?", [id])
         elif what == 'lbl':
             c.execute("DELETE FROM labels WHERE id = ?", [id])
+        # Delete tranzaction.
+        elif what == 'tranz':
+            c.execute("DELETE FROM tranzactions WHERE id = ?", [id])
+        # Delete client.
+        elif what == 'clients':
+            c.execute("DELETE FROM clients WHERE id = ?", [id])
+        # Delete image file.
         elif what == 'img':
             id = id.replace('%', '.')
             try: os.remove('database/'+id) ; img_deleted = True
@@ -345,7 +352,8 @@ def delete_item(what, id):
             return template('''%rebase error.htm
 <h3><span class="ui-icon ui-icon-info" style="float:left;margin-right:.4em;"></span>
     Message :<br /><br />
-    Item of type <b>{{what}}</b> with ID <b>{{id}}</b> was deleted !
+    Item of type <b>{{what}}</b> with ID <b>{{id}}</b> was deleted !<br /><br />
+    <a href="/view/{{what}}">Okay, go back</a>
 </h3>''', what=what, id=id)
 
     elif request.GET.get('action','').strip() == 'Cancel':
@@ -362,6 +370,12 @@ def delete_item(what, id):
             c.execute("SELECT id,name FROM categories WHERE id = ?", [id])
         elif what == 'lbl':
             c.execute("SELECT id,name FROM labels WHERE id = ?", [id])
+        # Select tranzaction.
+        elif what == 'tranz':
+            c.execute("SELECT id,'Tranz' FROM tranzactions WHERE id = ?", [id])
+        # Select client.
+        elif what == 'clients':
+            c.execute("SELECT id,name FROM clients WHERE id = ?", [id])
         result = c.fetchone()
         c.close()
 
@@ -379,7 +393,7 @@ def delete_item(what, id):
             return template('delete.htm', id=id, what=what, name=result[1])
 
 
-@route('/new/:what#obj|cat|lbl|tranz|clients#')
+@route('/new/:what#obj|cat|lbl|clients#')
 def new_item(what):
 
     if what == 'obj':
@@ -395,7 +409,7 @@ def new_item(what):
         return template('new.htm', what=what)
 
 
-@post('/new/:what#obj|cat|lbl|tranz|clients#')
+@post('/new/:what#obj|cat|lbl|clients#')
 def new_item_post(what):
 
     conn = sqlite3.connect('database/database.db')
@@ -433,11 +447,15 @@ def new_item_post(what):
             name = request.POST.get('name', '').strip()
             c.execute("INSERT INTO labels (name) VALUES (?)", [name])
 
+        elif what == 'clients':
+            name = request.POST.get('name', '').strip()
+            c.execute("INSERT INTO clients (name) VALUES (?)", [name])
+
         conn.commit()
         c.close()
 
         return template('base_redirect.htm', what=what, id=c.lastrowid, type='Message',
-            message='New %s was added into database, the ID is %i.' % (what.title(), c.lastrowid))
+            message='New %s added into database, the ID is %i.' % (what.title(), c.lastrowid))
 
     else:
 
