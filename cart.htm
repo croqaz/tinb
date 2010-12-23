@@ -35,9 +35,9 @@
 		%if r == 0:
 		  <td><a href="/item/{{row[r]}}">#{{row[r]}}</a></td>
 		%elif r == 2:
-		  <td><input type="number" name="q_{{i}}" size="6" min="1" value="{{row[r]}}"></td>
+		  <td><input type="number" name="q_{{i}}" size="6" min="-999" value="{{row[r]}}"></td>
 		%elif r == 3:
-		  <td><input type="number" name="p_{{i}}" size="6" min="1" value="{{row[r]}}"></td>
+		  <td><input type="number" name="p_{{i}}" size="6" min="0" value="{{row[r]}}"></td>
 		%elif r == 4:
 		  <td><input list="clients" name="c_{{i}}" value="{{row[r]}}" /></td>
 		%else:

@@ -70,14 +70,56 @@
 	  <input type="text" name="date" value="{{vdate}}" id="datepicker" class="form_input" required /><br />
 	  <br /><h4>Price :<h4>
 	  <input type="text" name="p" value="{{vp}}" class="form_input" autocomplete="off" required /><br />
+
 %elif what == 'cat':
-	  <h4>Change Category Name :<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" required /><br />
+	<h4>Change Category Name :<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" required /><br />
+
+%elif what == 'tranz':
+%import json
+%rows = json.loads(vname[0])
+
+	<table class="display" id="dtable">
+	  <thead>
+		<tr>
+		  <th>Item</th>
+		  <th>Quantity</th>
+		  <th>Price</th>
+		  <th>Client</th>
+		</tr>
+	  </thead>
+
+	<tbody style="color:black">
+	%for row in rows:
+		<tr>
+		<td>{{row['obj_id']}}</td>
+		<td>{{row['q']}}</td>
+		<td>{{row['p']}}</td>
+		<td>{{row['c']}}</td>
+		</tr>
+	%end
+	</tbody>
+
+	  <tfoot>
+		<tr>
+		  <th><input type="text" style="margin-left:-10px" name="search_item" value="Find Item" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_quantity" value="Find Quantity" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_price" value="Find Price" class="search_init" /></th>
+		  <th><input type="text" style="margin-left:-10px" name="search_client" value="Find Client" class="search_init" /></th>
+		</tr>
+	  </tfoot>
+	</table>
+
+	<h4>Total items : {{vname[1]}} items</h4>
+	<h4>Total price : {{vname[2]}} RON</h4>
+	<h4>Tranzactions are Read-Only !<h4>
+
 %else:
-	  <h4>This name is Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />
+	<h4>This name is Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />
 %end
+
 	  <br />
 	  <div class="styled">
-%if what != 'lbl' and what != 'clients':
+%if what != 'lbl' and what != 'tranz' and what != 'clients':
 	  <input type="submit" name="Submit" value="Save" />&nbsp;
 %elif what == 'obj':
 	  <a href="/hide/{{id}}">Hide?</a>&nbsp;

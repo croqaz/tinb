@@ -21,9 +21,7 @@ con.execute('CREATE TABLE clients (id INTEGER PRIMARY KEY, name TEXT NOT NULL)')
 # client ID
 
 # A few tranzactions.
-con.execute("INSERT INTO tranzactions (id,tranz,quantity,price) VALUES (101,'{}',2,30)")
-con.execute("INSERT INTO tranzactions (tranz,quantity,price)    VALUES ('{}',4,40)")
-con.execute("INSERT INTO tranzactions (tranz,quantity,price)    VALUES ('{}',5,50)")
+con.execute("INSERT INTO tranzactions (id,tranz,quantity,price) VALUES (101,'{}',1,1)")
 
 # A few clients.
 con.execute("INSERT INTO clients (id,name) VALUES (10,'Ana Mititichi')")
@@ -31,9 +29,9 @@ con.execute("INSERT INTO clients (name) VALUES    ('Mama (rodica)')")
 con.execute("INSERT INTO clients (name) VALUES    ('Corina (super cori)')")
 con.execute("INSERT INTO clients (name) VALUES    ('Bogdana')")
 con.execute("INSERT INTO clients (name) VALUES    ('Dana Popa')")
-con.execute("INSERT INTO clients (name) VALUES    ('Alina (vodafone)')")
 con.execute("INSERT INTO clients (name) VALUES    ('Antonia (vodafone)')")
 con.execute("INSERT INTO clients (name) VALUES    ('Flori (vodafone)')")
+con.execute("INSERT INTO clients (name) VALUES    ('Alina (vodafone)')")
 
 con.commit()
 

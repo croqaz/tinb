@@ -2,7 +2,7 @@
 import os, sys
 import shutil, glob
 import time
-import pickle
+import pickle, json
 import sqlite3
 import webbrowser
 from Backup_DropBox import upload_file
@@ -155,8 +155,8 @@ def view_tables(what='obj'):
         redirect('/view/obj')
     # Tranzactions.
     elif what == 'tranz':
-        c.execute("SELECT * FROM tranzactions")
-        cdescr=['id','tranz','quantity','price']
+        c.execute("SELECT id,quantity,price FROM tranzactions")
+        cdescr=['id','quantity','price']
     # Clients.
     elif what == 'clients':
         c.execute("SELECT * FROM clients")
@@ -171,7 +171,8 @@ def view_tables(what='obj'):
 def shopping_cart():
 
     # Load shopping cart.
-    d = list(pickle.load(open('database/cart.pck','rb')))
+    try: d = list(pickle.load(open('database/cart.pck','rb')))
+    except: d = []
 
     for i in range(len(d)):
         # Delete ?
@@ -198,7 +199,23 @@ def shopping_cart():
 
     # If CHECKOUT:
     if request.GET.get('submit') == 'Proceed to checkout':
-        print '!!! Proceed to checkout DETECTED !!!'
+
+        conn = sqlite3.connect('database/database.db')
+        c = conn.cursor()
+
+        # Total quantity and price.
+        tot_q = sum(int(val['q']) for val in d)
+        tot_p = sum(int(val['p']) for val in d)
+        # Insert this record in tranzactions.
+        c.execute("INSERT INTO tranzactions (tranz,quantity,price) VALUES (?,?,?)",
+            [json.dumps(d), tot_q, tot_p])
+        conn.commit()
+        c.close() ; del c
+
+        # Delete shopping cart file.
+        #try: os.remove('database/cart.pck')
+        #except: print('Cannot delete shopping cart file!')
+        redirect('/view/tranz')
 
     rows = []
     conn = sqlite3.connect('database/database.db')
@@ -461,6 +478,10 @@ def edit_item(what, id):
 
     elif what == 'lbl':
         c.execute("SELECT name FROM labels WHERE id = ?", [id])
+
+    elif what == 'tranz':
+        c.execute("SELECT tranz,quantity,price FROM tranzactions WHERE id = ?", [id])
+        return template('edit.htm', what=what, id=id, vname=c.fetchone())
 
     elif what == 'clients':
         c.execute("SELECT name FROM clients WHERE id = ?", [id])
