@@ -29,6 +29,7 @@ def server_static(filename=None, what=None):
 
 @route('/')
 @route('/home')
+@route('/home/')
 def home():
 
     conn = sqlite3.connect('database/database.db')
@@ -206,6 +207,9 @@ def shopping_cart():
         # Total quantity and price.
         tot_q = sum(int(val['q']) for val in d)
         tot_p = sum(int(val['p']) for val in d)
+        # Add Nr Crt.
+        for i in range(len(d)):
+            d[i]['nr'] = i+1
         # Insert this record in tranzactions.
         c.execute("INSERT INTO tranzactions (tranz,quantity,price) VALUES (?,?,?)",
             [json.dumps(d), tot_q, tot_p])
@@ -213,8 +217,8 @@ def shopping_cart():
         c.close() ; del c
 
         # Delete shopping cart file.
-        #try: os.remove('database/cart.pck')
-        #except: print('Cannot delete shopping cart file!')
+        try: os.remove('database/cart.pck')
+        except: print('Cannot delete shopping cart file!')
         redirect('/view/tranz')
 
     rows = []

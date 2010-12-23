@@ -5,8 +5,12 @@ import os, sqlite3
 con = sqlite3.connect('database/database.db')
 
 # Delete tables !!!
-con.execute("DROP TABLE categories")
-con.execute("DROP TABLE labels")
+try:
+    #con.execute("DROP TABLE categories")
+    #con.execute("DROP TABLE labels")
+    pass
+except:
+    pass
 # Re-create tables.
 con.execute('CREATE TABLE categories (id TEXT PRIMARY KEY, name TEXT NOT NULL)')
 con.execute('CREATE TABLE labels (id INTEGER PRIMARY KEY, name TEXT NOT NULL)')

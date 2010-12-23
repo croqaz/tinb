@@ -81,6 +81,7 @@
 	<table class="display" id="dtable">
 	  <thead>
 		<tr>
+		  <th>Nr_Crt</th>
 		  <th>Item</th>
 		  <th>Quantity</th>
 		  <th>Price</th>
@@ -91,7 +92,8 @@
 	<tbody style="color:black">
 	%for row in rows:
 		<tr>
-		<td>{{row['obj_id']}}</td>
+		<td>{{row['nr']}}</td>
+		<td><a href="/item/{{row['obj_id']}}">{{row['obj_id']}}</a></td>
 		<td>{{row['q']}}</td>
 		<td>{{row['p']}}</td>
 		<td>{{row['c']}}</td>
@@ -101,6 +103,7 @@
 
 	  <tfoot>
 		<tr>
+		  <th> </th>
 		  <th><input type="text" style="margin-left:-10px" name="search_item" value="Find Item" class="search_init" /></th>
 		  <th><input type="text" style="margin-left:-10px" name="search_quantity" value="Find Quantity" class="search_init" /></th>
 		  <th><input type="text" style="margin-left:-10px" name="search_price" value="Find Price" class="search_init" /></th>
@@ -109,9 +112,10 @@
 	  </tfoot>
 	</table>
 
-	<h4>Total items : {{vname[1]}} items</h4>
+	<h4>Total entries : {{rows[-1]['nr']}} entries</h4>
+	<h4>Total quantity : {{vname[1]}} items</h4>
 	<h4>Total price : {{vname[2]}} RON</h4>
-	<h4>Tranzactions are Read-Only !<h4>
+	<h4>Tranzactions cannot be edited !<h4>
 
 %else:
 	<h4>This name is Read-Only<h4><br /><input type="text" name="name" class="form_input" value="{{vname}}" readonly /><br />

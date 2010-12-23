@@ -6,8 +6,9 @@ con = sqlite3.connect('database/database.db')
 
 # Try to DELETE tables !!!
 try:
-    con.execute("DROP TABLE tranzactions")
-    con.execute("DROP TABLE clients")
+    #con.execute("DROP TABLE tranzactions")
+    #con.execute("DROP TABLE clients")
+    pass
 except:
     pass
 # Re-create tables.
@@ -15,6 +16,7 @@ con.execute('CREATE TABLE tranzactions (id INTEGER PRIMARY KEY, tranz TEXT, quan
 con.execute('CREATE TABLE clients (id INTEGER PRIMARY KEY, name TEXT NOT NULL)')
 
 # One tranzaction contains:
+# Nr Crt
 # item ID
 # quantity
 # price
