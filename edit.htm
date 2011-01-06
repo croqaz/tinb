@@ -101,20 +101,12 @@
 	%end
 	</tbody>
 
-	  <tfoot>
-		<tr>
-		  <th> </th>
-		  <th><input type="text" style="margin-left:-10px" name="search_item" value="Find Item" class="search_init" /></th>
-		  <th><input type="text" style="margin-left:-10px" name="search_quantity" value="Find Quantity" class="search_init" /></th>
-		  <th><input type="text" style="margin-left:-10px" name="search_price" value="Find Price" class="search_init" /></th>
-		  <th><input type="text" style="margin-left:-10px" name="search_client" value="Find Client" class="search_init" /></th>
-		</tr>
-	  </tfoot>
 	</table>
 
+	<h4>Date : {{vname[1]}}</h4>
 	<h4>Total entries : {{rows[-1]['nr']}} entries</h4>
-	<h4>Total quantity : {{vname[1]}} items</h4>
-	<h4>Total price : {{vname[2]}} RON</h4>
+	<h4>Total quantity : {{vname[2]}} items</h4>
+	<h4>Total price : {{vname[3]}} RON</h4>
 	<h4>Tranzactions cannot be edited !<h4>
 
 %else:

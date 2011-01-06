@@ -156,8 +156,8 @@ def view_tables(what='obj'):
         redirect('/view/obj')
     # Tranzactions.
     elif what == 'tranz':
-        c.execute("SELECT id,quantity,price FROM tranzactions")
-        cdescr=['id','quantity','price']
+        c.execute("SELECT id,date,quantity,price FROM tranzactions")
+        cdescr=['id','date','quantity','price']
     # Clients.
     elif what == 'clients':
         c.execute("SELECT * FROM clients")
@@ -211,8 +211,8 @@ def shopping_cart():
         for i in range(len(d)):
             d[i]['nr'] = i+1
         # Insert this record in tranzactions.
-        c.execute("INSERT INTO tranzactions (tranz,quantity,price) VALUES (?,?,?)",
-            [json.dumps(d), tot_q, tot_p])
+        c.execute("INSERT INTO tranzactions (tranz,date,quantity,price) VALUES (?,?,?,?)",
+            [json.dumps(d), time.strftime('%Y-%m-%d'), tot_q, tot_p])
         conn.commit()
         c.close() ; del c
 
@@ -502,7 +502,7 @@ def edit_item(what, id):
         c.execute("SELECT name FROM labels WHERE id = ?", [id])
 
     elif what == 'tranz':
-        c.execute("SELECT tranz,quantity,price FROM tranzactions WHERE id = ?", [id])
+        c.execute("SELECT tranz,date,quantity,price FROM tranzactions WHERE id = ?", [id])
         return template('edit.htm', what=what, id=id, vname=c.fetchone())
 
     elif what == 'clients':

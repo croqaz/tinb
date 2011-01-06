@@ -12,7 +12,7 @@ try:
 except:
     pass
 # Re-create tables.
-con.execute('CREATE TABLE tranzactions (id INTEGER PRIMARY KEY, tranz TEXT, quantity INTEGER NOT NULL, price INTEGER NOT NULL)')
+con.execute('CREATE TABLE tranzactions (id INTEGER PRIMARY KEY, tranz TEXT, date TEXT NOT NULL, quantity INTEGER NOT NULL, price INTEGER NOT NULL)')
 con.execute('CREATE TABLE clients (id INTEGER PRIMARY KEY, name TEXT NOT NULL)')
 
 # One tranzaction contains:
@@ -23,7 +23,7 @@ con.execute('CREATE TABLE clients (id INTEGER PRIMARY KEY, name TEXT NOT NULL)')
 # client ID
 
 # A few tranzactions.
-con.execute("INSERT INTO tranzactions (id,tranz,quantity,price) VALUES (101,'{}',1,1)")
+con.execute("INSERT INTO tranzactions (id,tranz,date,quantity,price) VALUES (101,'{}','2010-12-31',1,1)")
 
 # A few clients.
 con.execute("INSERT INTO clients (id,name) VALUES (10,'Ana Mititichi')")
